@@ -1,0 +1,174 @@
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { FaUser, FaEnvelope, FaLock, FaPhoneAlt } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { useForm } from "react-hook-form";
+import { email, z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { showToast } from "@/helpers/showToast";
+
+//  Validation Schema
+const formSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(6, "Password is required"),
+  })
+  
+
+const SignIn = () => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  //  Initialize react-hook-form
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  //  Submit Handler with API call
+  const onSubmit = async (values) => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:8080/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return showToast("error", data.message || "Login failed");
+      }
+
+      showToast("success", data.message || "Login successful!");
+    } catch (err) {
+      showToast("error", err.message || "Server error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+      className="min-h-screen flex justify-center items-center bg-gradient-to-br from-[#f9fafb] to-[#dbeafe]"
+    >
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
+        <motion.h2
+          initial={{ opacity: 0, y: -15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="text-gray-800 mb-6 text-3xl font-extrabold text-center"
+        >
+          Create Your Account
+        </motion.h2>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* Email */}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-700 font-medium flex items-center gap-2">
+                    <FaEnvelope className="text-[#2563eb]" /> Email
+                  </FormLabel>
+                  <FormControl>
+                    <motion.div
+                      whileHover={{ scale: 1.03 }}
+                      transition={{ type: "spring", stiffness: 200 }}
+                    >
+                      <Input
+                        placeholder="you@example.com"
+                        {...field}
+                        className="border-gray-300 focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/30 transition"
+                      />
+                    </motion.div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Password */}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-700 font-medium flex items-center gap-2">
+                    <FaLock className="text-[#2563eb]" /> Password
+                  </FormLabel>
+                  <FormControl>
+                    <motion.div
+                      whileHover={{ scale: 1.03 }}
+                      transition={{ type: "spring", stiffness: 200 }}
+                    >
+                      <Input
+                        type="password"
+                        placeholder="Enter your password"
+                        {...field}
+                        className="border-gray-300 focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/30 transition"
+                      />
+                    </motion.div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Submit Button */}
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <Button
+                type="submit"
+                className="w-full py-3 bg-[#2563eb] text-white font-semibold rounded-lg shadow-md hover:bg-[#1d4ed8] transition duration-300"
+                disabled={loading}
+              >
+                {loading ? "Signing Up..." : "Create Account"}
+              </Button>
+            </motion.div>
+          </form>
+        </Form>
+
+        <div className="flex items-center justify-center my-6">
+          <span className="text-sm text-gray-500">OR</span>
+        </div>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.96 }}
+          className="flex items-center justify-center w-full border border-gray-300 py-3 rounded-lg hover:bg-gray-50 transition"
+        >
+          <FcGoogle className="mr-2 text-xl" /> Sign up with Google
+        </motion.button>
+
+        <p className="text-sm text-gray-700 mt-6 text-center">
+          Already have an account?{" "}
+          <Link
+            to="/"
+            className="text-[#2563eb] font-medium hover:underline"
+          >
+            Login here
+          </Link>
+        </p>
+      </div>
+    </motion.div>
+  );
+};
+
+export default SignIn;
