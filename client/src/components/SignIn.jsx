@@ -57,7 +57,7 @@ const SignIn = () => {
 
       showToast("success", data.message || "Login successful!");
         if (data.registrationType === "FARMER") {
-          navigate("/farmer");
+          navigate("/farmer-popup");
         } else {
           navigate("/BUYYER");
         }

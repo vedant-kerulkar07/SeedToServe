@@ -30,7 +30,12 @@ const AddCategory = () => {
     // Fetch categories
     const fetchCategories = async () => {
         try {
-            const res = await fetch("http://localhost:8080/show/categories");
+             const token = localStorage.getItem("token");
+            const res = await fetch("http://localhost:8080/show/categories", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             const data = await res.json();
             setCategories(data);
         } catch (err) {
@@ -46,9 +51,13 @@ const AddCategory = () => {
     const onSubmit = async (data) => {
         setLoading(true);
         try {
+            const token = localStorage.getItem("token");
             const res = await fetch("http://localhost:8080/add/category", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
                 body: JSON.stringify(data),
             });
             const newCategory = await res.json();
@@ -65,7 +74,13 @@ const AddCategory = () => {
     const handleDelete = async (name) => {
         if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
         try {
-            await fetch(`http://localhost:8080/delete/category/${name}`, { method: "DELETE" });
+            const token = localStorage.getItem("token");
+            await fetch(`http://localhost:8080/delete/category/${name}`, { 
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setCategories(categories.filter((cat) => cat.name !== name));
         } catch (err) {
             console.error(err);
