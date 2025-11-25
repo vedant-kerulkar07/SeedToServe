@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { FiEdit, FiTrash2, FiCheck, FiX } from "react-icons/fi";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { showToast } from "@/helpers/showToast";
 
 // Zod schema
 const categorySchema = z.object({
@@ -39,7 +40,7 @@ const AddCategory = () => {
             const data = await res.json();
             setCategories(data);
         } catch (err) {
-            console.error(err);
+            showToast("error", err.message ||"Failed to fetch categories");
         }
     };
 
@@ -63,8 +64,9 @@ const AddCategory = () => {
             const newCategory = await res.json();
             setCategories((prev) => [...prev, newCategory]);
             form.reset();
+            showToast("success", "Category added successfully");
         } catch (err) {
-            console.error(err);
+            showToast("error", err.message || "Failed to add category");
         } finally {
             setLoading(false);
         }
@@ -83,7 +85,7 @@ const AddCategory = () => {
             });
             setCategories(categories.filter((cat) => cat.name !== name));
         } catch (err) {
-            console.error(err);
+           showToast("error", err.message || "Failed to delete category");
         }
     };
 
@@ -103,9 +105,13 @@ const AddCategory = () => {
     const handleUpdate = async (originalName) => {
         if (!editName) return;
         try {
+            const token = localStorage.getItem("token");
             const res = await fetch(`http://localhost:8080/update/category/${originalName}`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
                 body: JSON.stringify({ name: editName, description: editDescription }),
             });
             const updatedCategory = await res.json();
@@ -113,8 +119,9 @@ const AddCategory = () => {
             updatedCategories[editIndex] = updatedCategory;
             setCategories(updatedCategories);
             handleCancel();
+            showToast("success", "Category updated successfully");
         } catch (err) {
-            console.error(err);
+            showToast("error", err.message || "Failed to update category");
         }
     };
 
