@@ -55,6 +55,7 @@ const SignIn = () => {
         return showToast("error", data.message || "Login failed");
       }
 
+      localStorage.setItem("token", data.token);
       showToast("success", data.message || "Login successful!");
       if (data.registrationType === "Buyer") {
         navigate("/buyer-popup");

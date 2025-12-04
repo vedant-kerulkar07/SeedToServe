@@ -40,7 +40,7 @@ const FarmerPopup = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-xl py-3 font-medium shadow-md"
-                onClick={() => navigate("/AddProducts")}
+                onClick={() => navigate("/addproducts")}
               >
                 Add Products
               </motion.button>

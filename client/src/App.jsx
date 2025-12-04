@@ -7,6 +7,7 @@ import SignIn from './components/SignIn'
 import AuthSuccess from './components/AuthSucess'
 import FarmerPopup from './pages/FarmerPopup'
 import AddCategory from './pages/AddCategory'
+import AddProduct from './pages/AddProducts'
 
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
 
         <Route path="/farmer-popup" element={<FarmerPopup />} />
         <Route path="/addcategory" element={<AddCategory />} />
+        <Route path="/addproducts" element={<AddProduct />} />
       </Routes>
 
   )
