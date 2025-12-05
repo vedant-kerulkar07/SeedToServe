@@ -90,10 +90,10 @@ const AddCategory = () => {
 
       const newCategory = await res.json();
       setCategories((prev) => [...prev, newCategory]);
-      form.reset();
       showToast("success", "Category added successfully");
+      form.reset();
     } catch (err) {
-      showToast("error", err.message || "Failed to add category");
+      showToast("error", "Failed to add Category");
     } finally {
       setLoading(false);
     }

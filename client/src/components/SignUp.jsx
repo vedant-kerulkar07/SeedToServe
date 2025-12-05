@@ -42,12 +42,13 @@ const SignUp = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      registrationType: "",
       firstName: "",
       lastName: "",
       email: "",
       password: "",
       confirmPassword: "",
-      registrationType: "",
+
     },
   });
   //  Submit Handler with API call
@@ -60,8 +61,7 @@ const SignUp = () => {
         body: JSON.stringify(values),
       });
 
-      const data = await response.text();
-      console.log("registrationType =", data.registrationType);
+      const data = await response.json();
       if (!response.ok) {
         return showToast("error", data.message || "Registration failed");
       }

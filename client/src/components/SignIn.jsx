@@ -57,11 +57,13 @@ const SignIn = () => {
 
       localStorage.setItem("token", data.token);
       showToast("success", data.message || "Login successful!");
-      if (data.registrationType === "Buyer") {
-        navigate("/buyer-popup");
-      } else {
+
+      if (data.role === "BUYER") {
+         navigate("/buyer-popup");
+        } else {
          navigate("/farmer-popup");
-      }
+        }
+
 
     } catch (err) {
       showToast("error", err.message || "Server error");

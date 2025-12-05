@@ -159,15 +159,15 @@ const AddProduct = () => {
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`, // DO NOT add content-type !!
+          Authorization: `Bearer ${token}`, 
         },
         body: formData,
       }
     );
-
+    console.log(res)
     const newProduct = await res.json();
     setProducts((prev) => [...prev, newProduct]);
-
+    console.log(newProduct)
     form.reset();
     showToast("success", "Product added successfully");
 
